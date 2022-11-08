@@ -7,9 +7,10 @@ export PATH=$PATH:/home/simonb/.local/bin
 if [ ! -f /usr/share/games/fortune/kaizo-quotes ]; then                                                                                                                                       
     wget -O kaizo-quotes https://kaizo.org/misc/kaizo-quotes.html && \
         doas install -m 0644 kaizo-quotes \
-        /usr/share/games/fortunes && \
-        cd /usr/share/games/fortunes && \
-        doas strfile kaizo-quotes
+        /usr/share/games/fortune/ && \
+        cd /usr/share/games/fortune && \
+        doas strfile kaizo-quotes && \
+        rm -f -- kaizo-quotes
 fi     
 
 if [[ "$OSTYPE" == "openbsd"* ]]; then 
