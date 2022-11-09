@@ -1,4 +1,8 @@
-export PATH=$PATH:/sbin:/usr/sbin:/usr/local/sbin:/opt/diet/sbin:/usr/local/avr/bin
+export PATH=$PATH:/sbin:/usr/sbin:/usr/local/sbin
+
+if [[ $OSTTYPE == "linux-gnu" ]]; then
+    export PATH=$PATH:/usr/local/go/bin
+fi
 
 # Python/Pip
 export PATH=$PATH:/home/simonb/.local/bin
