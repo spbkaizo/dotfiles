@@ -1,6 +1,6 @@
 export PATH=$PATH:/sbin:/usr/sbin:/usr/local/sbin
 
-if [[ $OSTTYPE == "linux-gnu" ]]; then
+if [[ $OSTYPE == "linux-gnu" ]]; then
     export PATH=$PATH:/usr/local/go/bin
 fi
 
