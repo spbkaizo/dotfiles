@@ -41,15 +41,16 @@ autoload -Uz compinit
 compinit
 
 alias vi=vim
+alias sudo=doas
 
 #export NNTPSERVER="csiph.com"
 export NNTPSERVER="nntp.aioe.org"
 
 # PF aliases, to make life easier...
-alias pflog="sudo tcpdump -nettti pflog0"
-alias pftop="sudo pftop"
-alias pfinfo="sudo pfctl -s info"
-alias pfstat="sudo pfctl -vvsr"
+alias pflog="doas tcpdump -nettti pflog0"
+alias pftop="doas pftop"
+alias pfinfo="doas pfctl -s info"
+alias pfstat="doas pfctl -vvsr"
 
 # make obsd more linux like... 
 #alias killall="zap -s9 "
