@@ -8,7 +8,7 @@ if [ ! -f /usr/share/games/fortune/kaizo-quotes ]; then
     wget -O /tmp/$$-kaizo-quotes.tar.gz https://kaizo.org/misc/kaizo-quotes.tar.gz && \
         mkdir /tmp/$$ && \
         tar -C /tmp/$$/ -xvf /tmp/$$-kaizo-quotes.tar.gz && \
-        doas install -m 0644 /tmp/$$/kaizo-quotes /usr/share/games/fortune/kaizo-quote && \
+        doas install -m 0644 /tmp/$$/kaizo-quotes /usr/share/games/fortune/kaizo-quotes && \
         doas install -m 0644 /tmp/$$/kaizo-quotes.dat /usr/share/games/fortune/kaizo-quotes.dat 
 fi
 
