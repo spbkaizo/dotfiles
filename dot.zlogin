@@ -29,7 +29,7 @@ fi
 ls-go &> /dev/null || go install github.com/acarl005/ls-go@latest
 
 if [[ "$OSTYPE" == "openbsd"* ]]; then 
-    /usr/games/fortune kaizo-quotes
+    /usr/games/fortune /usr/share/games/fortune/kaizo-quotes
 else
     fortune kaizo-quotes
 fi
