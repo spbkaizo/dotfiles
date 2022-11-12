@@ -12,7 +12,7 @@ endif
 
 let g:vim_bootstrap_langs = "c,go,perl"
 let g:vim_bootstrap_editor = "vim"				" nvim or vim
-let g:vim_bootstrap_theme = "molokai"
+let g:vim_bootstrap_theme = "solarized"
 let g:vim_bootstrap_frams = ""
 
 if !filereadable(vimplug_exists)
@@ -50,6 +50,7 @@ Plug 'Yggdroot/indentLine'
 Plug 'editor-bootstrap/vim-bootstrap-updater'
 Plug 'tpope/vim-rhubarb' " required by fugitive to :Gbrowse
 Plug 'tomasr/molokai'
+Plug 'ericbn/vim-solarized'
 
 
 if isdirectory('/usr/local/opt/fzf')
@@ -154,11 +155,12 @@ let g:session_command_aliases = 1
 "" Visual Settings
 "*****************************************************************************
 syntax on
+set background=dark
 set ruler
 set number
 
 let no_buffers_menu=1
-colorscheme molokai
+colorscheme solarized
 
 
 set mousemodel=popup
