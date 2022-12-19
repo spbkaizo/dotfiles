@@ -1,9 +1,9 @@
-# $Id: .Xdefaults,v 1.1 2008/03/25 11:34:23 simonb Exp $
-#
-# ~/.Xdefaults file, by Simon B <simonb@kaizo.org>
-#####################################################################
+!# $Id: .Xdefaults,v 1.1 2008/03/25 11:34:23 simonb Exp $
+!#
+!# ~/.Xdefaults file, by Simon B <simonb@kaizo.org>
+!#####################################################################
 
-### Xterm setup...
+!### Xterm setup...
 XTerm*termName: xterm-color
 XTerm*title: Xterm
 XTerm*LoginShell: 	true
@@ -12,14 +12,14 @@ XTerm*saveLines: 2048
 XTerm*scrollBar: true
 XTerm*visualBell: true
 XTerm*charClass: 33:48,36-47:48,58-59:48,61:48,63-64:48,95:48,126:48
-#XTerm*geometry: 114x25
+!#XTerm*geometry: 114x25
 XTerm*toolBar: true
 Xterm*renderFont: true
-# needs xterm linked with truetype fonts...
+!# needs xterm linked with truetype fonts...
 XTerm*faceName: Lucida Console
 XTerm*faceSize: 10
 XTerm*underLine:               on
-# colours.  not colors.
+!# colours.  not colors.
 Term*colorMode:                on
 XTerm*colorBD:                  lightyellow
 XTerm*colorBDMode:             off
@@ -61,17 +61,17 @@ XTerm*color15:          #ffffff
 XtDefaultBackground: black
 XtDefaultForeground: lightgrey
 
-#Mwm*fontList: Liberation Mono
-#Mwm*menu*fontList: Liberation Mono
+!#Mwm*fontList: Liberation Mono
+!#Mwm*menu*fontList: Liberation Mono
 
 ! Default font for your application titles
-#Mwm*fontList:         -adobe-helvetica-bold-r-normal--*-120-*-*-*-*-*-*
+!#Mwm*fontList:         -adobe-helvetica-bold-r-normal--*-120-*-*-*-*-*-*
 ! Default font for your menus
-#Mwm*menu*fontList:    -adobe-helvetica-bold-r-normal--*-120-*-*-*-*-*-*
+!#Mwm*menu*fontList:    -adobe-helvetica-bold-r-normal--*-120-*-*-*-*-*-*
 ! Cause the xclock icon not to show up in the icon box
-#Mwm*XClock*clientFunctions:     -minimize
+!#Mwm*XClock*clientFunctions:     -minimize
 ! Cause the xbiff icon not to show up in the icon box
-#Mwm*xbiff*clientFunctions:    -minimize
+!#Mwm*xbiff*clientFunctions:    -minimize
 	
 control*Background:		cornsilk4
 control*Foreground:		black
