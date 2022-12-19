@@ -1,0 +1,104 @@
+# $Id: .Xdefaults,v 1.1 2008/03/25 11:34:23 simonb Exp $
+#
+# ~/.Xdefaults file, by Simon B <simonb@kaizo.org>
+#####################################################################
+
+### Xterm setup...
+XTerm*termName: xterm-color
+XTerm*title: Xterm
+XTerm*LoginShell: 	true
+XTerm*rightScrollBar: true
+XTerm*saveLines: 2048
+XTerm*scrollBar: true
+XTerm*visualBell: true
+XTerm*charClass: 33:48,36-47:48,58-59:48,61:48,63-64:48,95:48,126:48
+#XTerm*geometry: 114x25
+XTerm*toolBar: true
+Xterm*renderFont: true
+# needs xterm linked with truetype fonts...
+XTerm*faceName: Lucida Console
+XTerm*faceSize: 10
+XTerm*underLine:               on
+# colours.  not colors.
+Term*colorMode:                on
+XTerm*colorBD:                  lightyellow
+XTerm*colorBDMode:             off
+XTerm*colorUL:                  yellow
+XTerm*colorULMode:              on
+XTerm*dynamicColors:            off
+XTerm*highlightSelection:       true
+XTerm*background:               #c0c0c0
+!XTerm*foreground:               #7f7f7f
+XTerm*foreground:		darkblue
+
+!colors
+!black
+XTerm*color0:           #000000
+XTerm*color8:           #666666
+!red
+XTerm*color1:           #9e1828
+XTerm*color9:           #cf6171
+!green
+XTerm*color2:           #aece92
+XTerm*color10:          #c5f779
+!yellow
+XTerm*color3:           #968a38
+XTerm*color11:          #fff796
+!blue
+XTerm*color4:           #414171
+XTerm*color12:          #4186be
+!magenta
+XTerm*color5:           #96c359
+XTerm*color13:          #cf9ebe
+!cyan
+XTerm*color6:           #418179
+XTerm*color14:          #71bebe
+!white
+XTerm*color7:           #bebebe
+XTerm*color15:          #ffffff 
+
+
+XtDefaultBackground: black
+XtDefaultForeground: lightgrey
+
+#Mwm*fontList: Liberation Mono
+#Mwm*menu*fontList: Liberation Mono
+
+! Default font for your application titles
+#Mwm*fontList:         -adobe-helvetica-bold-r-normal--*-120-*-*-*-*-*-*
+! Default font for your menus
+#Mwm*menu*fontList:    -adobe-helvetica-bold-r-normal--*-120-*-*-*-*-*-*
+! Cause the xclock icon not to show up in the icon box
+#Mwm*XClock*clientFunctions:     -minimize
+! Cause the xbiff icon not to show up in the icon box
+#Mwm*xbiff*clientFunctions:    -minimize
+	
+control*Background:		cornsilk4
+control*Foreground:		black
+
+Console*scrollBar:		true
+
+deskset.perfmeter*Background:	thistle4
+deskset.perfmeter.hasTitle:	True
+
+Mwm*XConsole.clientDecoration:	+resizeh
+Mwm*perfmeter.clientDecoration:	+resizeh
+Mwm*control.clientDecoration:	+resizeh
+Mwm*XTerm*clientFunctions:	all
+Mwm*showFeedback:		resize placement move
+Mwm*keyboardFocusPolicy:	pointer
+Mwm*moveOpaque:			true
+Mwm*iconImageMaximum:		48x48
+Mwm*fadeNormalIcon:		true
+Mwm*interactivePlacement:	true
+Mwm*Panner*ClientPinned:	True
+
+Mwm*background:			#305050
+Mwm*activeBackground:		#506070
+Mwm*menu*background:		#9c917a
+Mwm*resizeBorderWidth:		4
+Mwm*frameBorderWidth:		4
+Mwm*activeBackgroundPixmap:	/home/simonb/.pixmaps/slate.xpm
+Mwm*backgroundPixmap:		/home/simonb/.pixmaps/slate.xpm
+Mwm*menu*backgroundPixmap:      /home/simonb/.pixmaps/slate.xpm
+
