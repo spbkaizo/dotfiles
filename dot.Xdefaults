@@ -11,7 +11,7 @@ XTerm*saveLines: 2048
 XTerm*scrollBar: true
 XTerm*visualBell: true
 XTerm*charClass: 33:48,36-47:48,58-59:48,61:48,63-64:48,95:48,126:48
-#XTerm*geometry: 114x25
+XTerm*geometry: 114x25
 XTerm*toolBar: true
 Xterm*renderFont: true
 XTerm*underLine:               on
