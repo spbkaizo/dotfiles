@@ -1,0 +1,3 @@
+[submodule "macos-terminal-solarized"]
+	path = macos-terminal-solarized
+	url = https://github.com/newelldev/macos-terminal-solarized.git
