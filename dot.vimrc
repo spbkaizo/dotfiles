@@ -162,6 +162,10 @@ set number
 let no_buffers_menu=1
 colorscheme solarized
 
+" completely disable use of mouse, it's pointless and confusing and term
+" emulators handle it far far better....
+set mouse=
+set ttymouse=
 
 set mousemodel=popup
 set t_Co=256
