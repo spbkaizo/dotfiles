@@ -71,7 +71,9 @@ autoload -Uz compinit
 compinit
 
 alias vi=vim
-alias sudo=doas
+if [[ "$OSTYPE" != "darwin"* ]]; then
+    alias sudo=doas
+fi
 
 #export NNTPSERVER="csiph.com"
 export NNTPSERVER="nntp.aioe.org"
