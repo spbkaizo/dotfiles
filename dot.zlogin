@@ -38,6 +38,8 @@ else
     fortune kaizo-quotes
 fi
 
+uprecords &> /dev/null && uprecords
+
 echo ""
 
 export PYTHONIOENCODING=utf8
