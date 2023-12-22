@@ -53,7 +53,7 @@ pwgen -1 32 -s
 
 echo -n "Current external IPv4: "
 curl -4 https://wtfismyip.com/text 
-echo -n "Current external IPv6:"
+echo -n "Current external IPv6: "
 curl -6 https://wtfismyip.com/text
 
 export EDITOR=vim
