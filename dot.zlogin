@@ -51,7 +51,9 @@ export PYTHONIOENCODING=utf8
 echo -n "New Random Password: "
 pwgen -1 32 -s
 
-echo -n "Current external IP: "
-curl https://wtfismyip.com/text
+echo -n "Current external IPv4: "
+curl -4 https://wtfismyip.com/text 
+echo -n "Current external IPv6:"
+curl -6 https://wtfismyip.com/text
 
 export EDITOR=vim
