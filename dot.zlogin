@@ -36,6 +36,9 @@ fi
 # bootstrap ls-go.  assume go is already installed via a package manager.
 ls-go &> /dev/null || go install github.com/acarl005/ls-go@latest
 
+# install speedtest-go
+which speedtest-go &> /dev/null || go install github.com/showwin/speedtest-go@latest
+
 if [[ "$OSTYPE" == "openbsd"* ]]; then 
     /usr/games/fortune /usr/share/games/fortune/kaizo-quotes
 else
