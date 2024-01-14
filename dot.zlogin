@@ -60,3 +60,4 @@ echo -n "Current external IPv6: "
 curl -6 https://wtfismyip.com/text
 
 export EDITOR=vim
+export MPD_HOST=myhyfy.av.kaizo.lan
