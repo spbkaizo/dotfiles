@@ -160,6 +160,8 @@ set ruler
 set number
 
 let no_buffers_menu=1
+let g:solarized_termcolors=256
+let g:airline_solarized_bg='dark'
 colorscheme solarized
 
 " completely disable use of mouse, it's pointless and confusing and term
