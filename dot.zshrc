@@ -86,3 +86,6 @@ alias pfstat="doas pfctl -vvsr"
 
 # make obsd more linux like... 
 #alias killall="zap -s9 "
+
+# make the time command prettier!
+TIMEFMT=$'Time spent in user mode (CPU seconds): %U\nTime spent in kernel mode (CPU seconds): %S\nTotal time: %E\nCPU utilisation (percentage): %P\nTimes the process was swapped: %w\nTimes of major page faults: %F\nTimes of minor page faults: %R\n'
