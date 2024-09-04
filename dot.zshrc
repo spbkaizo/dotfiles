@@ -53,6 +53,9 @@ zstyle :compinstall filename '${HOME}/.zshrc'
 
 prompt clint
 
+# Enable fzf keybindings and fuzzy completion
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
 # aliases
 #alias ls="ls --color "
 alias ll="ls -la"
