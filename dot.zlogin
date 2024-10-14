@@ -24,9 +24,9 @@ if [[ ! ( -f /usr/share/games/fortune/kaizo-quotes || -f /usr/share/games/fortun
         install -m 0644 /tmp/$$/kaizo-quotes /opt/homebrew/share/games/fortunes/kaizo-quotes
         install -m 0644 /tmp/$$/kaizo-quotes.dat /opt/homebrew/share/games/fortunes/kaizo-quotes.dat
     elif [[ "$OSTYPE" == "freebsd"* ]] then
-        mkdir /usr/local/share/games/fortune/
-        install -m 0644 /tmp/$$/kaizo-quotes /usr/local/share/games/fortune/kaizo-quotes
-        install -m 0644 /tmp/$$/kaizo-quotes.dat /usr/local/share/games/fortune/kaizo-quotes.dat
+        doas mkdir /usr/local/share/games/fortune/
+        doas install -m 0644 /tmp/$$/kaizo-quotes /usr/local/share/games/fortune/kaizo-quotes
+        doas install -m 0644 /tmp/$$/kaizo-quotes.dat /usr/local/share/games/fortune/kaizo-quotes.dat
     else
         doas install -m 0644 /tmp/$$/kaizo-quotes /usr/share/games/fortune/kaizo-quotes
         doas install -m 0644 /tmp/$$/kaizo-quotes.dat /usr/share/games/fortune/kaizo-quotes.dat 
