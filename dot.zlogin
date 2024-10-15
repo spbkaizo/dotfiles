@@ -10,26 +10,26 @@ fi
 # Python/Pip
 export PATH=$PATH:/home/simonb/.local/bin
 
-
-if [[ ! ( -f /usr/share/games/fortune/kaizo-quotes || -f /usr/share/games/fortunes/kaizo-quotes || /opt/homebrew/share/games/fortunes/kaizo-quotes ) ]]; then
+if [[ ! -f /usr/share/games/fortune/kaizo-quotes && ! -f /usr/share/games/fortunes/kaizo-quotes && ! -f /opt/homebrew/share/games/fortunes/kaizo-quotes ]]; then
     rm -rf -- /tmp/$$ /tmp/$$-kaizo-quotes
     wget -O /tmp/$$-kaizo-quotes.tar.gz https://kaizo.org/misc/kaizo-quotes.tar.gz && \
         mkdir /tmp/$$ && \
         tar -C /tmp/$$/ -xvf /tmp/$$-kaizo-quotes.tar.gz
+    
     if [[ "$OSTYPE" == "linux-gnu"* ]]; then
         doas install -m 0644 /tmp/$$/kaizo-quotes /usr/share/games/fortunes/kaizo-quotes
-        doas install -m 0644 /tmp/$$/kaizo-quotes.dat /usr/share/games/fortunes/kaizo-quotes.dat 
+        doas install -m 0644 /tmp/$$/kaizo-quotes.dat /usr/share/games/fortunes/kaizo-quotes.dat
     elif [[ "$OSTYPE" == "darwin"* ]]; then
         brew install fortune
         install -m 0644 /tmp/$$/kaizo-quotes /opt/homebrew/share/games/fortunes/kaizo-quotes
         install -m 0644 /tmp/$$/kaizo-quotes.dat /opt/homebrew/share/games/fortunes/kaizo-quotes.dat
-    elif [[ "$OSTYPE" == "freebsd"* ]] then
-        doas mkdir /usr/local/share/games/fortune/
+    elif [[ "$OSTYPE" == "freebsd"* ]]; then  # Added semicolon before then
+        doas mkdir -p /usr/local/share/games/fortune/
         doas install -m 0644 /tmp/$$/kaizo-quotes /usr/local/share/games/fortune/kaizo-quotes
         doas install -m 0644 /tmp/$$/kaizo-quotes.dat /usr/local/share/games/fortune/kaizo-quotes.dat
     else
         doas install -m 0644 /tmp/$$/kaizo-quotes /usr/share/games/fortune/kaizo-quotes
-        doas install -m 0644 /tmp/$$/kaizo-quotes.dat /usr/share/games/fortune/kaizo-quotes.dat 
+        doas install -m 0644 /tmp/$$/kaizo-quotes.dat /usr/share/games/fortune/kaizo-quotes.dat
     fi
 fi
 
