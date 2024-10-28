@@ -10,7 +10,12 @@ fi
 # Python/Pip
 export PATH=$PATH:/home/simonb/.local/bin
 
-if [[ ! -f /usr/share/games/fortune/kaizo-quotes && ! -f /usr/share/games/fortunes/kaizo-quotes && ! -f /opt/homebrew/share/games/fortunes/kaizo-quotes ]]; then
+if [[ 
+      ! -f /usr/share/games/fortune/kaizo-quotes && 
+      ! -f /usr/share/games/fortunes/kaizo-quotes && 
+      ! -f /opt/homebrew/share/games/fortunes/kaizo-quotes && 
+      ! -f /usr/local/share/games/fortune/kaizo-quotes 
+]]; then
     rm -rf -- /tmp/$$ /tmp/$$-kaizo-quotes
     wget -O /tmp/$$-kaizo-quotes.tar.gz https://kaizo.org/misc/kaizo-quotes.tar.gz && \
         mkdir /tmp/$$ && \
