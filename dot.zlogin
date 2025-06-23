@@ -26,6 +26,7 @@ if [[
         doas install -m 0644 /tmp/$$/kaizo-quotes.dat /usr/share/games/fortunes/kaizo-quotes.dat
     elif [[ "$OSTYPE" == "darwin"* ]]; then
         brew install fortune
+        strfile         /tmp/$$/kaizo-quote
         install -m 0644 /tmp/$$/kaizo-quotes /opt/homebrew/share/games/fortunes/kaizo-quotes
         install -m 0644 /tmp/$$/kaizo-quotes.dat /opt/homebrew/share/games/fortunes/kaizo-quotes.dat
     elif [[ "$OSTYPE" == "freebsd"* ]]; then  # Added semicolon before then
