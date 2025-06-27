@@ -4,5 +4,6 @@ Host *
   UseKeychain yes
   AddKeysToAgent yes
   IdentityFile ~/.ssh/id_ed25519_sk_rk
+  IdentityFile ~/.ssh/id_ed25519
   Ciphers aes128-ctr,aes192-ctr,aes256-ctr
   MACs hmac-sha1,hmac-sha2-256,hmac-sha2-512

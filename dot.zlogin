@@ -25,8 +25,8 @@ if [[
         doas install -m 0644 /tmp/$$/kaizo-quotes /usr/share/games/fortunes/kaizo-quotes
         doas install -m 0644 /tmp/$$/kaizo-quotes.dat /usr/share/games/fortunes/kaizo-quotes.dat
     elif [[ "$OSTYPE" == "darwin"* ]]; then
-        brew install fortune
-        strfile         /tmp/$$/kaizo-quote
+        # brew install fortune
+        # strfile         /tmp/$$/kaizo-quote
         install -m 0644 /tmp/$$/kaizo-quotes /opt/homebrew/share/games/fortunes/kaizo-quotes
         install -m 0644 /tmp/$$/kaizo-quotes.dat /opt/homebrew/share/games/fortunes/kaizo-quotes.dat
     elif [[ "$OSTYPE" == "freebsd"* ]]; then  # Added semicolon before then
@@ -48,7 +48,7 @@ which speedtest-go &> /dev/null || go install github.com/showwin/speedtest-go@la
 if [[ "$OSTYPE" == "openbsd"* ]]; then 
     /usr/games/fortune /usr/share/games/fortune/kaizo-quotes
 else
-    fortune kaizo-quotes
+    # fortune kaizo-quotes
 fi
 
 uprecords &> /dev/null && uprecords
