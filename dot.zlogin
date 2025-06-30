@@ -1,69 +1,52 @@
-# Set initial path
-export PATH=$PATH:/sbin:/usr/sbin:/usr/local/sbin
-export PATH=${HOME}/go/bin:${HOME}/src/gocode/bin/:$PATH:~/bin/:/usr/local/bin:/usr/local/sbin
+# === PATH Configuration ===
 export GOPATH=$HOME/src/gocode
+export PATH=$HOME/go/bin:$GOPATH/bin:$HOME/bin:/usr/local/bin:/usr/local/sbin:/sbin:/usr/sbin:/usr/local/sbin:$PATH
 
-if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-    export PATH=$PATH:/usr/local/go/bin
-fi
+[[ "$OSTYPE" == "linux-gnu"* ]] && export PATH=$PATH:/usr/local/go/bin
+export PATH=$PATH:$HOME/.local/bin
 
-# Python/Pip
-export PATH=$PATH:/home/simonb/.local/bin
-
-if [[ 
-      ! -f /usr/share/games/fortune/kaizo-quotes && 
-      ! -f /usr/share/games/fortunes/kaizo-quotes && 
-      ! -f /opt/homebrew/share/games/fortunes/kaizo-quotes && 
-      ! -f /usr/local/share/games/fortune/kaizo-quotes 
-]]; then
-    rm -rf -- /tmp/$$ /tmp/$$-kaizo-quotes
-    wget -O /tmp/$$-kaizo-quotes.tar.gz https://kaizo.org/misc/kaizo-quotes.tar.gz && \
-        mkdir /tmp/$$ && \
-        tar -C /tmp/$$/ -xvf /tmp/$$-kaizo-quotes.tar.gz
-    
-    if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-        doas install -m 0644 /tmp/$$/kaizo-quotes /usr/share/games/fortunes/kaizo-quotes
-        doas install -m 0644 /tmp/$$/kaizo-quotes.dat /usr/share/games/fortunes/kaizo-quotes.dat
-    elif [[ "$OSTYPE" == "darwin"* ]]; then
-        # brew install fortune
-        # strfile         /tmp/$$/kaizo-quote
-        install -m 0644 /tmp/$$/kaizo-quotes /opt/homebrew/share/games/fortunes/kaizo-quotes
-        install -m 0644 /tmp/$$/kaizo-quotes.dat /opt/homebrew/share/games/fortunes/kaizo-quotes.dat
-    elif [[ "$OSTYPE" == "freebsd"* ]]; then  # Added semicolon before then
-        doas mkdir -p /usr/local/share/games/fortune/
-        doas install -m 0644 /tmp/$$/kaizo-quotes /usr/local/share/games/fortune/kaizo-quotes
-        doas install -m 0644 /tmp/$$/kaizo-quotes.dat /usr/local/share/games/fortune/kaizo-quotes.dat
-    else
-        doas install -m 0644 /tmp/$$/kaizo-quotes /usr/share/games/fortune/kaizo-quotes
-        doas install -m 0644 /tmp/$$/kaizo-quotes.dat /usr/share/games/fortune/kaizo-quotes.dat
-    fi
-fi
-
-# bootstrap ls-go.  assume go is already installed via a package manager.
-ls-go &> /dev/null || go install github.com/acarl005/ls-go@latest
-
-# install speedtest-go
-which speedtest-go &> /dev/null || go install github.com/showwin/speedtest-go@latest
-
-if [[ "$OSTYPE" == "openbsd"* ]]; then 
-    /usr/games/fortune /usr/share/games/fortune/kaizo-quotes
-else
-    # fortune kaizo-quotes
-fi
-
-uprecords &> /dev/null && uprecords
-
-echo ""
-
+# === Python ===
 export PYTHONIOENCODING=utf8
 
-echo -n "New Random Password: "
-pwgen -1 32 -s
-
-echo -n "Current external IPv4: "
-curl -4 https://wtfismyip.com/text 
-echo -n "Current external IPv6: "
-curl -6 https://wtfismyip.com/text
-
+# === Editor & MPD ===
 export EDITOR=vim
 export MPD_HOST=myhyfy.av.kaizo.lan
+
+# === Start ssh-agent and add keys if not already running ===
+if [[ -z "$SSH_AUTH_SOCK" || ! -S "$SSH_AUTH_SOCK" ]]; then
+  eval "$(ssh-agent -s)" > /dev/null
+  for key in ~/.ssh/id_{rsa,ed25519}; do
+    [[ -f $key ]] && ssh-add "$key" > /dev/null 2>&1
+  done
+fi
+
+# === Fortune: Install kaizo-quotes if not present ===
+if ! ls /usr/share/games/fortune/kaizo-quotes /usr/share/games/fortunes/kaizo-quotes /opt/homebrew/share/games/fortunes/kaizo-quotes /usr/local/share/games/fortune/kaizo-quotes &> /dev/null; then
+  TMPDIR="/tmp/kaizo.$$"
+  mkdir -p "$TMPDIR"
+  curl -sSL -o "$TMPDIR/kaizo-quotes.tar.gz" https://kaizo.org/misc/kaizo-quotes.tar.gz && tar -C "$TMPDIR" -xzf "$TMPDIR/kaizo-quotes.tar.gz"
+
+  case "$OSTYPE" in
+    linux-gnu*) doas install -m 0644 "$TMPDIR"/kaizo-quotes{,.dat} /usr/share/games/fortunes/ ;;
+    darwin*) install -m 0644 "$TMPDIR"/kaizo-quotes{,.dat} /opt/homebrew/share/games/fortunes/ ;;
+    freebsd*) 
+      doas mkdir -p /usr/local/share/games/fortune/
+      doas install -m 0644 "$TMPDIR"/kaizo-quotes{,.dat} /usr/local/share/games/fortune/
+      ;;
+    *) doas install -m 0644 "$TMPDIR"/kaizo-quotes{,.dat} /usr/share/games/fortune/ ;;
+  esac
+fi
+
+# === Show quote and uptime records if available ===
+[[ "$OSTYPE" == "openbsd"* ]] && /usr/games/fortune /usr/share/games/fortune/kaizo-quotes
+command -v uprecords &>/dev/null && uprecords
+
+# === Go Tools Bootstrap ===
+command -v ls-go &>/dev/null || go install github.com/acarl005/ls-go@latest
+command -v speedtest-go &>/dev/null || go install github.com/showwin/speedtest-go@latest
+
+# === Informational Output ===
+echo ""
+echo -n "New Random Password: "; pwgen -1 32 -s
+echo -n "Current external IPv4: "; curl -s4 https://wtfismyip.com/text
+echo -n "Current external IPv6: "; curl -s6 https://wtfismyip.com/text
