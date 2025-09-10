@@ -1,0 +1,85 @@
+---
+- name: Create .ssh directory with correct permissions
+  file:
+    path: "{{ dotfiles_home }}/.ssh"
+    state: directory
+    mode: '0700'
+
+- name: Install cross-platform dotfiles
+  copy:
+    src: "{{ dotfiles_repo_path }}/{{ item.src }}"
+    dest: "{{ dotfiles_home }}/{{ item.dest }}"
+    mode: "{{ item.mode }}"
+    backup: true
+  loop:
+    - { src: "dot.vimrc", dest: ".vimrc", mode: "0600" }
+    - { src: "dot.zshrc", dest: ".zshrc", mode: "0600" }  
+    - { src: "dot.zlogin", dest: ".zlogin", mode: "0600" }
+    - { src: "dot.tmux.conf", dest: ".tmux.conf", mode: "0600" }
+    - { src: "dot.ssh_config", dest: ".ssh/config", mode: "0600" }
+  register: dotfiles_installed
+
+- name: Install X11 dotfiles (Linux/Unix systems with X11)
+  copy:
+    src: "{{ dotfiles_repo_path }}/dot.Xdefaults"
+    dest: "{{ dotfiles_home }}/.Xdefaults"
+    mode: "0600"
+    backup: true
+  when: ansible_os_family != "Darwin"
+  register: x11_dotfiles_installed
+
+- name: Display installed dotfiles
+  debug:
+    msg: "Installed {{ item.item.dest }} from {{ item.item.src }}"
+  loop: "{{ dotfiles_installed.results }}"
+  when: item.changed
+
+- name: Display X11 dotfiles installation
+  debug:
+    msg: "Installed .Xdefaults (Linux/Unix X11 systems)"
+  when: 
+    - x11_dotfiles_installed is defined
+    - x11_dotfiles_installed.changed
+
+- name: Check current shell
+  command: echo $SHELL
+  register: current_shell
+  changed_when: false
+
+- name: Get zsh path
+  command: which zsh
+  register: zsh_path
+  changed_when: false
+  failed_when: false
+
+- name: Set zsh as default shell (macOS)
+  user:
+    name: "{{ dotfiles_user }}"
+    shell: "{{ zsh_path.stdout | default('/bin/zsh') }}"
+  when: 
+    - current_shell.stdout != zsh_path.stdout | default('/bin/zsh')
+    - zsh_path.rc == 0
+    - ansible_os_family == "Darwin"
+    - set_zsh_as_default | default(true)
+  become: true
+  ignore_errors: true
+
+- name: Set zsh as default shell (Linux)
+  user:
+    name: "{{ dotfiles_user }}"
+    shell: "{{ zsh_path.stdout | default('/usr/bin/zsh') }}"
+  when: 
+    - current_shell.stdout != zsh_path.stdout | default('/usr/bin/zsh')
+    - zsh_path.rc == 0
+    - ansible_os_family != "Darwin"
+    - set_zsh_as_default | default(true)
+  become: true
+  ignore_errors: true
+
+- name: Display shell change info
+  debug:
+    msg: |
+      Shell configuration:
+      - Current shell: {{ current_shell.stdout }}
+      - Zsh path: {{ zsh_path.stdout | default('not found') }}
+      - Will change shell: {{ (current_shell.stdout != zsh_path.stdout) and (zsh_path.rc == 0) }}

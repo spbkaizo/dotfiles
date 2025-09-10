@@ -1,0 +1,134 @@
+---
+- name: Verify we're on Linux
+  fail:
+    msg: "Linux packages role should only run on Linux systems"
+  when: ansible_os_family == "Darwin"
+
+- name: Update package cache (Debian/Ubuntu)
+  apt:
+    update_cache: yes
+    cache_valid_time: 86400
+  when: ansible_os_family == "Debian"
+  become: true
+
+- name: Update package cache (RedHat/CentOS/Fedora)
+  yum:
+    update_cache: yes
+  when: ansible_os_family == "RedHat"
+  become: true
+
+- name: Update package cache (Arch Linux)
+  pacman:
+    update_cache: yes
+  when: ansible_os_family == "Archlinux"
+  become: true
+
+- name: Install essential packages (Debian/Ubuntu)
+  apt:
+    name: "{{ debian_essential_packages }}"
+    state: present
+  when: ansible_os_family == "Debian"
+  become: true
+
+- name: Install essential packages (RedHat/CentOS/Fedora)
+  yum:
+    name: "{{ redhat_essential_packages }}"
+    state: present
+  when: ansible_os_family == "RedHat"
+  become: true
+
+- name: Install essential packages (Arch Linux)
+  pacman:
+    name: "{{ arch_essential_packages }}"
+    state: present
+  when: ansible_os_family == "Archlinux"
+  become: true
+
+- name: Install development packages (Debian/Ubuntu)
+  apt:
+    name: "{{ debian_dev_packages }}"
+    state: present
+  when: ansible_os_family == "Debian"
+  become: true
+
+- name: Install development packages (RedHat/CentOS/Fedora)
+  yum:
+    name: "{{ redhat_dev_packages }}"
+    state: present
+  when: ansible_os_family == "RedHat"
+  become: true
+
+- name: Install development packages (Arch Linux)
+  pacman:
+    name: "{{ arch_dev_packages }}"
+    state: present
+  when: ansible_os_family == "Archlinux"
+  become: true
+
+- name: Install media packages (Debian/Ubuntu)
+  apt:
+    name: "{{ debian_media_packages }}"
+    state: present
+  when: 
+    - ansible_os_family == "Debian"
+    - install_media_packages | default(true)
+  become: true
+
+- name: Install media packages (RedHat/CentOS/Fedora)
+  yum:
+    name: "{{ redhat_media_packages }}"
+    state: present
+  when: 
+    - ansible_os_family == "RedHat" 
+    - install_media_packages | default(true)
+  become: true
+
+- name: Install media packages (Arch Linux)
+  pacman:
+    name: "{{ arch_media_packages }}"
+    state: present
+  when: 
+    - ansible_os_family == "Archlinux"
+    - install_media_packages | default(true)
+  become: true
+
+- name: Install snap packages (if snapd available)
+  snap:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ snap_packages }}"
+  when: 
+    - install_snap_packages | default(false)
+    - ansible_os_family in ["Debian", "RedHat"]
+  ignore_errors: true
+
+- name: Clean package cache (Debian/Ubuntu)
+  apt:
+    autoclean: yes
+    autoremove: yes
+  when: ansible_os_family == "Debian"
+  become: true
+
+- name: Clean package cache (RedHat/CentOS/Fedora)
+  yum:
+    autoremove: yes
+  when: ansible_os_family == "RedHat"
+  become: true
+
+- name: Display installed packages summary
+  debug:
+    msg: |
+      📦 Linux packages installed successfully!
+      
+      Distribution: {{ ansible_distribution }} {{ ansible_distribution_version }}
+      Package Manager: {{ ansible_pkg_mgr }}
+      
+      Installed package categories:
+      - Essential system tools ✅
+      - Development tools ✅
+      {% if install_media_packages | default(true) %}
+      - Media tools ✅
+      {% endif %}
+      {% if install_snap_packages | default(false) %}
+      - Snap packages ✅
+      {% endif %}
