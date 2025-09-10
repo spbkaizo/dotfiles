@@ -1,0 +1,70 @@
+---
+- name: Bootstrap System (macOS/Linux)
+  hosts: localhost
+  gather_facts: true
+  become: false
+
+  pre_tasks:
+    - name: Verify supported operating system
+      fail:
+        msg: "This playbook supports macOS and Linux only. Detected: {{ ansible_os_family }}"
+      when: ansible_os_family not in ["Darwin", "RedHat", "Debian", "Suse", "Archlinux"]
+
+    - name: Show system information
+      debug:
+        msg: |
+          System: {{ ansible_distribution }} {{ ansible_distribution_version }}
+          OS Family: {{ ansible_os_family }}
+          User: {{ dotfiles_user }}
+          Home: {{ dotfiles_home }}
+          Architecture: {{ ansible_architecture }}
+
+  roles:
+    - role: homebrew
+      tags: ['homebrew', 'packages', 'macos']
+      when: 
+        - ansible_os_family == "Darwin"
+        - install_homebrew | default(true)
+
+    - role: linux_packages  
+      tags: ['packages', 'linux']
+      when: 
+        - ansible_os_family != "Darwin"
+        - install_packages | default(true)
+
+    - role: dotfiles
+      tags: ['dotfiles', 'config']
+      when: install_dotfiles | default(true)
+
+    - role: macos
+      tags: ['macos', 'system']
+      when: 
+        - ansible_os_family == "Darwin"
+        - configure_macos | default(true)
+
+    - role: vscode
+      tags: ['vscode', 'extensions']
+      when: install_vscode_extensions | default(true)
+
+  post_tasks:
+    - name: Display completion message
+      debug:
+        msg: |
+          ✅ System bootstrap completed successfully!
+          
+          Next steps:
+          - Restart your terminal to apply shell changes
+          {% if ansible_os_family == "Darwin" %}
+          - Some macOS settings may require a logout/login or restart
+          {% endif %}
+          - VSCode extensions will be available next time you open VSCode
+          
+          To run specific parts later:
+          {% if ansible_os_family == "Darwin" %}
+          ansible-playbook playbook.yml --tags homebrew
+          ansible-playbook playbook.yml --tags macos
+          {% else %}
+          ansible-playbook playbook.yml --tags packages
+          {% endif %}
+          ansible-playbook playbook.yml --tags dotfiles
+          ansible-playbook playbook.yml --tags vscode
