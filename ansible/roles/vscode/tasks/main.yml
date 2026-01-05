@@ -1,0 +1,169 @@
+---
+- name: Check if Visual Studio Code is installed (macOS)
+  stat:
+    path: /Applications/Visual Studio Code.app
+  register: vscode_app_macos
+  when: ansible_os_family == "Darwin"
+
+- name: Check if Visual Studio Code is installed (Linux - snap)
+  command: snap list code
+  register: vscode_snap_check
+  failed_when: false
+  changed_when: false
+  when: ansible_os_family != "Darwin"
+
+- name: Check if Visual Studio Code is installed (Linux - system package)
+  command: which code
+  register: vscode_system_check
+  failed_when: false
+  changed_when: false
+  when: ansible_os_family != "Darwin"
+
+- name: Set VSCode installation status
+  set_fact:
+    vscode_installed: >-
+      {% if ansible_os_family == "Darwin" %}
+      {{ vscode_app_macos.stat.exists | default(false) | bool }}
+      {% else %}
+      {{ ((vscode_snap_check.rc | default(1) == 0) or (vscode_system_check.rc | default(1) == 0)) | bool }}
+      {% endif %}
+
+- name: Install Visual Studio Code (macOS via Homebrew)
+  homebrew_cask:
+    name: visual-studio-code
+    state: present
+  when: 
+    - ansible_os_family == "Darwin"
+    - not vscode_installed
+
+- name: Install Visual Studio Code (Linux via snap)
+  snap:
+    name: code
+    classic: true
+    state: present
+  when: 
+    - ansible_os_family != "Darwin"
+    - not vscode_installed
+  become: true
+  ignore_errors: true
+
+- name: Install Visual Studio Code (Debian/Ubuntu via apt)
+  block:
+    - name: Add Microsoft GPG key
+      apt_key:
+        url: https://packages.microsoft.com/keys/microsoft.asc
+        state: present
+      become: true
+    
+    - name: Add VSCode repository
+      apt_repository:
+        repo: "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/trusted.gpg.d/microsoft.asc.gpg] https://packages.microsoft.com/repos/code stable main"
+        state: present
+      become: true
+    
+    - name: Install VSCode
+      apt:
+        name: code
+        state: present
+        update_cache: yes
+      become: true
+  when: 
+    - ansible_os_family == "Debian"
+    - not vscode_installed
+    - vscode_snap_check.rc != 0
+  ignore_errors: true
+
+- name: Install Visual Studio Code (RedHat/Fedora via rpm)
+  block:
+    - name: Import Microsoft GPG key
+      rpm_key:
+        key: https://packages.microsoft.com/keys/microsoft.asc
+        state: present
+      become: true
+    
+    - name: Add VSCode repository
+      yum_repository:
+        name: code
+        description: Visual Studio Code
+        baseurl: https://packages.microsoft.com/yumrepos/vscode
+        gpgcheck: yes
+        gpgkey: https://packages.microsoft.com/keys/microsoft.asc
+        enabled: yes
+      become: true
+    
+    - name: Install VSCode
+      yum:
+        name: code
+        state: present
+      become: true
+  when: 
+    - ansible_os_family == "RedHat"
+    - not vscode_installed
+  ignore_errors: true
+
+- name: Check if code command is available
+  command: which code
+  register: code_command
+  failed_when: false
+  changed_when: false
+
+- name: Install code command if VSCode is installed but code command is not available (macOS)
+  shell: |
+    export PATH="/Applications/Visual Studio Code.app/Contents/Resources/app/bin:$PATH"
+    echo 'export PATH="/Applications/Visual Studio Code.app/Contents/Resources/app/bin:$PATH"' >> {{ dotfiles_home }}/.zshrc
+  when: 
+    - ansible_os_family == "Darwin"
+    - vscode_app_macos.stat.exists | default(false)
+    - code_command.rc != 0
+  notify: reload shell
+
+- name: Re-check code command availability after potential installation
+  command: which code
+  register: code_command_final
+  failed_when: false
+  changed_when: false
+
+- name: Install VSCode extensions
+  command: code --install-extension {{ item }}
+  loop:
+    - akmittal.hugofy
+    - golang.go
+    - kddejong.vscode-cfn-lint
+    - mohsen1.prettify-json
+    - ms-python.python
+    - ms-vscode.makefile-tools
+    - redhat.ansible
+    - redhat.vscode-yaml
+  register: extension_install
+  failed_when: false
+  changed_when: "'already installed' not in extension_install.stdout"
+  when: 
+    - vscode_installed | bool or (code_command_final.rc | default(1) == 0)
+
+- name: Show extension installation results
+  debug:
+    msg: "Extension {{ item.item }}: {{ 'Already installed' if 'already installed' in item.stdout else 'Installed' }}"
+  loop: "{{ extension_install.results }}"
+  when: 
+    - extension_install is defined
+    - extension_install.results is defined
+    - item.item is defined
+
+- name: Display VSCode installation and extensions summary
+  debug:
+    msg: |
+      📝 Visual Studio Code Status:
+      
+      {% if ansible_os_family == "Darwin" %}
+      - VSCode App: {{ "✅ Installed" if vscode_app_macos.stat.exists | default(false) else "❌ Not found" }}
+      {% else %}
+      - VSCode (snap): {{ "✅ Installed" if vscode_snap_check.rc == 0 else "❌ Not installed" }}
+      - VSCode (system): {{ "✅ Available" if vscode_system_check.rc == 0 else "❌ Not available" }}
+      {% endif %}
+      - Code command: {{ "✅ Available" if code_command_final.rc == 0 else "❌ Not available" }}
+      
+      {% if extension_install is defined and extension_install.results is defined %}
+      Extensions processed: {{ extension_install.results | length }}
+      {% endif %}
+      
+      Extensions will be available next time you open VSCode.

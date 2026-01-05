@@ -1,0 +1,85 @@
+---
+- name: Configure macOS system preferences
+  osx_defaults:
+    domain: "{{ item.domain }}"
+    key: "{{ item.key }}"
+    type: "{{ item.type }}"
+    value: "{{ item.value }}"
+  loop:
+    # Finder preferences
+    - { domain: "com.apple.finder", key: "AppleShowAllFiles", type: "bool", value: true }
+    - { domain: "com.apple.finder", key: "ShowPathbar", type: "bool", value: true }
+    - { domain: "com.apple.finder", key: "ShowStatusBar", type: "bool", value: true }
+    - { domain: "com.apple.finder", key: "_FXShowPosixPathInTitle", type: "bool", value: true }
+    - { domain: "com.apple.finder", key: "FXDefaultSearchScope", type: "string", value: "SCcf" }
+    - { domain: "com.apple.finder", key: "FXEnableExtensionChangeWarning", type: "bool", value: false }
+    
+    # Dock preferences
+    - { domain: "com.apple.dock", key: "autohide", type: "bool", value: true }
+    - { domain: "com.apple.dock", key: "show-recents", type: "bool", value: false }
+    - { domain: "com.apple.dock", key: "tilesize", type: "int", value: 48 }
+    - { domain: "com.apple.dock", key: "minimize-to-application", type: "bool", value: true }
+    
+    # Trackpad preferences
+    - { domain: "com.apple.driver.AppleBluetoothMultitouch.trackpad", key: "Clicking", type: "int", value: 1 }
+    - { domain: "com.apple.AppleMultitouchTrackpad", key: "Clicking", type: "int", value: 1 }
+    
+    # Keyboard preferences
+    - { domain: "NSGlobalDomain", key: "KeyRepeat", type: "int", value: 2 }
+    - { domain: "NSGlobalDomain", key: "InitialKeyRepeat", type: "int", value: 15 }
+    - { domain: "NSGlobalDomain", key: "ApplePressAndHoldEnabled", type: "bool", value: false }
+    
+    # Menu bar preferences
+    - { domain: "com.apple.menuextra.clock", key: "DateFormat", type: "string", value: "EEE MMM d  H:mm" }
+    - { domain: "NSGlobalDomain", key: "AppleShowScrollBars", type: "string", value: "WhenScrolling" }
+    
+    # Screenshots
+    - { domain: "com.apple.screencapture", key: "location", type: "string", value: "{{ dotfiles_home }}/Desktop" }
+    - { domain: "com.apple.screencapture", key: "type", type: "string", value: "png" }
+    - { domain: "com.apple.screencapture", key: "disable-shadow", type: "bool", value: true }
+  notify:
+    - restart finder
+    - restart dock
+    - restart systemuiserver
+
+- name: Enable full keyboard access for all controls
+  osx_defaults:
+    domain: NSGlobalDomain
+    key: AppleKeyboardUIMode
+    type: int
+    value: 3
+
+- name: Disable automatic capitalization
+  osx_defaults:
+    domain: NSGlobalDomain
+    key: NSAutomaticCapitalizationEnabled
+    type: bool
+    value: false
+
+- name: Disable smart dashes
+  osx_defaults:
+    domain: NSGlobalDomain
+    key: NSAutomaticDashSubstitutionEnabled
+    type: bool
+    value: false
+
+- name: Disable automatic period substitution
+  osx_defaults:
+    domain: NSGlobalDomain
+    key: NSAutomaticPeriodSubstitutionEnabled
+    type: bool
+    value: false
+
+- name: Disable smart quotes
+  osx_defaults:
+    domain: NSGlobalDomain
+    key: NSAutomaticQuoteSubstitutionEnabled
+    type: bool
+    value: false
+
+- name: Disable auto-correct
+  osx_defaults:
+    domain: NSGlobalDomain
+    key: NSAutomaticSpellingCorrectionEnabled
+    type: bool
+    value: false

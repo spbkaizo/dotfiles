@@ -1,0 +1,201 @@
+---
+- name: Verify we're on macOS
+  fail:
+    msg: "Homebrew role should only run on macOS"
+  when: ansible_os_family != "Darwin"
+
+- name: Check if Homebrew is installed (Intel Mac)
+  stat:
+    path: /usr/local/bin/brew
+  register: homebrew_intel_check
+
+- name: Check if Homebrew is installed (Apple Silicon Mac)
+  stat:
+    path: /opt/homebrew/bin/brew
+  register: homebrew_arm_check
+
+- name: Set Homebrew installation status
+  set_fact:
+    homebrew_installed: "{{ homebrew_intel_check.stat.exists or homebrew_arm_check.stat.exists }}"
+
+- name: Install Homebrew
+  shell: |
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  when: not homebrew_installed
+  environment:
+    NONINTERACTIVE: 1
+
+- name: Add Homebrew to PATH (Apple Silicon)
+  lineinfile:
+    path: "{{ dotfiles_home }}/.zprofile"
+    line: 'eval "$(/opt/homebrew/bin/brew shellenv)"'
+    create: true
+  when: 
+    - not homebrew_installed
+    - ansible_architecture == "arm64"
+
+- name: Add Homebrew to PATH (Intel)
+  lineinfile:
+    path: "{{ dotfiles_home }}/.zprofile" 
+    line: 'eval "$(/usr/local/bin/brew shellenv)"'
+    create: true
+  when:
+    - not homebrew_installed
+    - ansible_architecture == "x86_64"
+
+- name: Update Homebrew
+  homebrew:
+    update_homebrew: true
+  
+# No additional taps needed - all packages available in homebrew/core
+
+- name: Install core development packages
+  homebrew:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - ansible
+    - ansible-lint
+    - gh
+    - git
+    - go
+    - hugo
+    - jq
+    - python3
+    - node
+    - tmux
+    - vim
+    - zsh
+
+- name: Install security and networking tools
+  homebrew:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - gnupg
+    - nmap
+    - yubico-piv-tool
+    - ykman
+    - opensc
+    - pwgen
+
+- name: Install media and utility tools
+  homebrew:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - ffmpeg
+    - yt-dlp
+    - htop
+    - wget
+    - curl
+    - unzip
+    - p7zip
+
+- name: Install cloud and DevOps tools
+  homebrew:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - awscli
+    - docker
+    - colima
+    - kubectl
+
+- name: Install specialized tools (optional)
+  homebrew:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - fortune
+    - cowsay
+    - llama.cpp
+  ignore_errors: true
+
+- name: Check for existing applications
+  stat:
+    path: "{{ item.path }}"
+  register: app_exists
+  loop:
+    - { name: "visual-studio-code", path: "/Applications/Visual Studio Code.app" }
+    - { name: "google-chrome", path: "/Applications/Google Chrome.app" }
+    - { name: "signal", path: "/Applications/Signal.app" }
+    - { name: "slack", path: "/Applications/Slack.app" }
+    - { name: "the-unarchiver", path: "/Applications/The Unarchiver.app" }
+    - { name: "vlc", path: "/Applications/VLC.app" }
+
+- name: Install essential applications (only if not present)
+  homebrew_cask:
+    name: "{{ item.item.name }}"
+    state: present
+  loop: "{{ app_exists.results }}"
+  when: not item.stat.exists
+  ignore_errors: true
+
+- name: Check for existing development applications
+  stat:
+    path: "{{ item.path }}"
+  register: dev_app_exists
+  loop:
+    - { name: "postman", path: "/Applications/Postman.app" }
+    - { name: "cyberduck", path: "/Applications/Cyberduck.app" }
+
+- name: Check for existing AI applications
+  stat:
+    path: "{{ item.path }}"
+  register: ai_app_exists
+  loop:
+    - { name: "claude", path: "/Applications/Claude.app" }
+    - { name: "chatgpt", path: "/Applications/ChatGPT.app" }
+
+- name: Install development applications (only if not present)
+  homebrew_cask:
+    name: "{{ item.item.name }}"
+    state: present
+  loop: "{{ dev_app_exists.results }}"
+  when: not item.stat.exists
+  ignore_errors: true
+
+- name: Install AI applications (only if not present)
+  homebrew_cask:
+    name: "{{ item.item.name }}"
+    state: present
+  loop: "{{ ai_app_exists.results }}"
+  when: not item.stat.exists
+  ignore_errors: true
+
+- name: Check for existing media applications
+  stat:
+    path: "{{ item.path }}"
+  register: media_app_exists
+  loop:
+    - { name: "audacity", path: "/Applications/Audacity.app" }
+    - { name: "handbrake", path: "/Applications/HandBrake.app" }
+
+- name: Install media applications (only if not present)
+  homebrew_cask:
+    name: "{{ item.item.name }}"
+    state: present
+  loop: "{{ media_app_exists.results }}"
+  when: not item.stat.exists
+  ignore_errors: true
+
+- name: Install fonts (always safe to reinstall)
+  homebrew_cask:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - font-b612
+    - font-b612-mono
+    - font-comic-shanns-mono-nerd-font
+    - font-hack-nerd-font
+  ignore_errors: true
+
+- name: Clean up Homebrew
+  homebrew:
+    upgrade_all: false
+  register: brew_cleanup
+  
+- name: Run brew cleanup
+  command: brew cleanup
+  changed_when: false

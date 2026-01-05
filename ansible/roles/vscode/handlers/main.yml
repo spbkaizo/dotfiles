@@ -1,0 +1,4 @@
+---
+- name: reload shell
+  debug:
+    msg: "Shell configuration updated. Please restart your terminal or run 'source ~/.zshrc' to reload PATH."

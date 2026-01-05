@@ -1,0 +1,12 @@
+---
+- name: restart finder
+  command: killall Finder
+  ignore_errors: true
+
+- name: restart dock
+  command: killall Dock
+  ignore_errors: true
+
+- name: restart systemuiserver
+  command: killall SystemUIServer
+  ignore_errors: true

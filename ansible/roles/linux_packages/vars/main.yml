@@ -1,0 +1,136 @@
+---
+# Essential packages for all Linux distributions
+debian_essential_packages:
+  - curl
+  - wget
+  - git
+  - vim
+  - tmux
+  - zsh
+  - htop
+  - tree
+  - unzip
+  - ca-certificates
+  - gnupg
+  - software-properties-common
+  - apt-transport-https
+  - build-essential
+  - cmake
+  - ninja-build
+  - pkg-config
+
+redhat_essential_packages:
+  - curl
+  - wget
+  - git
+  - vim
+  - tmux
+  - zsh
+  - htop
+  - tree
+  - unzip
+  - ca-certificates
+  - gnupg2
+  - dnf-plugins-core
+  - gcc
+  - gcc-c++
+  - make
+  - cmake
+  - ninja-build
+  - pkgconfig
+
+arch_essential_packages:
+  - curl
+  - wget
+  - git
+  - vim
+  - tmux
+  - zsh
+  - htop
+  - tree
+  - unzip
+  - ca-certificates
+  - gnupg
+  - base-devel
+  - cmake
+  - ninja
+  - pkgconf
+
+# Development packages
+debian_dev_packages:
+  - python3
+  - python3-pip
+  - python3-dev
+  - nodejs
+  - npm
+  - golang-go
+  - gh
+  - jq
+  - ansible
+  - ansible-lint
+  - yamllint
+  - docker.io
+  - docker-compose
+  - openssh-client
+  - openssh-server
+
+redhat_dev_packages:
+  - python3
+  - python3-pip  
+  - python3-devel
+  - nodejs
+  - npm
+  - golang
+  - gh
+  - jq
+  - ansible
+  - docker
+  - docker-compose
+  - openssh-clients
+  - openssh-server
+
+arch_dev_packages:
+  - python
+  - python-pip
+  - nodejs
+  - npm
+  - go
+  - github-cli
+  - jq
+  - ansible
+  - ansible-lint
+  - docker
+  - docker-compose
+  - openssh
+
+# Media packages (optional)
+debian_media_packages:
+  - ffmpeg
+  - vlc
+  - gimp
+  - audacity
+  - mediainfo
+  - yt-dlp
+
+redhat_media_packages:
+  - ffmpeg
+  - vlc
+  - gimp
+  - audacity
+  - mediainfo
+  - yt-dlp
+
+arch_media_packages:
+  - ffmpeg
+  - vlc
+  - gimp
+  - audacity
+  - mediainfo
+  - yt-dlp
+
+# Snap packages (optional)
+snap_packages:
+  - code
+  - postman
+  - discord
+  - signal-desktop
