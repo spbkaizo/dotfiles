@@ -59,7 +59,6 @@ prompt clint
 # aliases
 #alias ls="ls --color "
 alias ll="ls -la"
-alias ls="ls-go"
 alias -s pdf=evince
 alias -s mp3=mpg123
 alias -s go="go run"

@@ -18,6 +18,3 @@ if [[ -z "$SSH_AUTH_SOCK" || ! -S "$SSH_AUTH_SOCK" ]]; then
     [[ -f $key ]] && ssh-add "$key" > /dev/null 2>&1
   done
 fi
-
-# === Go Tools Bootstrap ===
-command -v ls-go &>/dev/null || go install github.com/acarl005/ls-go@latest
